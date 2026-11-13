@@ -1,180 +1,153 @@
-# Smart RAG
+# 🧠 Smart RAG — Full-Stack Document Assistant & Retrieval Augmented Generation Platform
 
-Smart RAG is a full-stack Retrieval Augmented Generation app with a FastAPI backend and a React chatbot frontend. Users can register, log in, upload documents or raw text, ask questions, and inspect retrieved source context.
+Smart RAG is a full-stack Retrieval Augmented Generation (RAG) application built with a **FastAPI** backend and a **React + TypeScript** chatbot frontend. Users can register, log in, upload multi-format documents or raw text, ask context-aware questions, and inspect retrieved source chunks in real time.
 
-## Features
+---
 
-- Document ingestion for TXT, PDF, and DOCX files
-- Raw text ingestion
-- Chatbot-first RAG interface
-- FAISS vector search
-- Sentence Transformers embeddings
-- OpenAI chat completion support
-- Redis-backed users, metadata, and query cache
-- JWT authentication
-- Source/context inspection in the frontend
-- Docker setup for local full-stack testing
+## 🌟 Key Highlights
 
-## Tech Stack
+- **Multi-Format Document Ingestion**: Upload and index `.txt`, `.pdf`, and `.docx` files or submit raw text directly into the vector store.
+- **Semantic Vector Search**: Uses **Sentence Transformers** embeddings paired with **FAISS** vector indexing for fast, accurate context retrieval.
+- **Chatbot-First RAG Interface**: Conversational React UI with real-time source/context inspection so users can verify which document chunks grounded each answer.
+- **Redis Caching & Persistence**: Redis-backed user management, document metadata storage, and query caching to lower latency and API costs.
+- **Role-Based JWT Authentication**: Secure user registration, login, token refresh, and admin user management endpoints.
+- **Containerized Deployment**: Ready-to-run Docker and Docker Compose configurations for local development and production deployment.
 
-**Backend**
-- FastAPI
-- LangChain
-- FAISS
-- Sentence Transformers
-- OpenAI API
-- Redis
-- JWT auth
-- Uvicorn
+---
 
-**Frontend**
-- React
-- TypeScript
-- Vite
-- Tailwind CSS
-- TanStack Query
-- Axios
-- Lucide React
+## 🛠️ Tech Stack
 
-## Project Structure
+| Layer | Technologies |
+| :--- | :--- |
+| **Frontend** | React, TypeScript, Vite, Tailwind CSS, TanStack Query, Axios, Lucide React |
+| **Backend** | FastAPI, Python 3.12+, LangChain, Uvicorn |
+| **AI & Vector Search** | FAISS, Sentence Transformers, OpenAI API (`gpt-4o-mini`) |
+| **Database & Cache** | Redis |
+| **DevOps & Auth** | JWT Authentication, Docker, Docker Compose, Nginx |
+
+---
+
+## 📂 Project Architecture
 
 ```txt
 Smart-RAG/
 ├── backend/
-│   ├── api/
-│   ├── app/
-│   ├── auth/
-│   ├── rag/
-│   ├── scripts/
-│   ├── smart_rag/
-│   ├── utils/
-│   ├── .env.example
-│   ├── Dockerfile
-│   ├── main.py
-│   └── requirements.txt
+│   ├── api/                 # FastAPI route handlers (auth, ingestion, query, health)
+│   ├── app/                 # Core application configuration & lifecycle
+│   ├── auth/                # JWT authentication & password hashing
+│   ├── rag/                 # Document chunking, embeddings, FAISS store & LLM chain
+│   ├── scripts/             # Utility scripts (admin user initialization)
+│   ├── smart_rag/           # Domain models & schemas
+│   ├── utils/               # Helper utilities & Redis client
+│   ├── .env.example         # Environment variable template
+│   ├── Dockerfile           # Backend container configuration
+│   ├── main.py              # FastAPI entry point
+│   └── requirements.txt     # Python dependencies
 ├── frontend/
-│   ├── public/
-│   ├── src/
-│   ├── .env.example
-│   ├── Dockerfile
-│   ├── nginx.conf
-│   └── package.json
-├── docker-compose.yml
-├── docker-compose.dev.yml
+│   ├── public/              # Static assets
+│   ├── src/                 # React TypeScript components, hooks & API services
+│   ├── .env.example         # Frontend environment template
+│   ├── Dockerfile           # Frontend production container
+│   ├── nginx.conf           # Nginx reverse proxy configuration
+│   └── package.json         # Node dependencies
+├── docker-compose.yml       # Production multi-container setup
+├── docker-compose.dev.yml   # Development setup with hot-reload
 ├── .gitignore
 └── README.md
 ```
 
-## Prerequisites
+---
 
-- Python 3.12+
-- uv
-- Node.js 24+
-- npm
-- Redis
-- OpenAI API key
-- Docker, optional
+## 🚀 Getting Started
 
-## Backend Setup
+### Prerequisites
+- **Python** 3.12+ & `uv`
+- **Node.js** 24+ & `npm`
+- **Redis** (local instance or cloud Redis)
+- **OpenAI API Key**
+- **Docker** *(optional)*
 
-From the project root:
+---
 
-```powershell
-cd backend
-uv venv
-uv pip install -r requirements.txt
+### 1. Clone the Repository
+```bash
+git clone [https://github.com/akshay-bytes11/Smart-RAG.git](https://github.com/akshay-bytes11/Smart-RAG.git)
+cd Smart-RAG
 ```
 
-Create `backend/.env` from `backend/.env.example`:
+---
 
-```env
-OPENAI_API_KEY=your_openai_api_key_here
-LLM_MODEL=gpt-4o-mini
-VECTOR_STORE_PATH=./vector_store
-REDIS_HOST=localhost
-REDIS_PORT=6379
-REDIS_PASSWORD=
-CORS_ORIGINS=http://localhost:5173,http://127.0.0.1:5173,http://localhost:3000
-SECRET_KEY=change-this-to-a-secure-secret-key-min-32-characters
-ADMIN_USERNAME=admin
-ADMIN_PASSWORD=admin123
-ADMIN_EMAIL=admin@example.com
-```
+### 2. Backend Setup
+1. Navigate to the backend directory and install dependencies:
+   ```powershell
+   cd backend
+   uv venv
+   uv pip install -r requirements.txt
+   ```
+2. Create `backend/.env` from `backend/.env.example`:
+   ```env
+   OPENAI_API_KEY=your_openai_api_key_here
+   LLM_MODEL=gpt-4o-mini
+   VECTOR_STORE_PATH=./vector_store
+   REDIS_HOST=localhost
+   REDIS_PORT=6379
+   REDIS_PASSWORD=
+   CORS_ORIGINS=http://localhost:5173,[http://127.0.0.1:5173](http://127.0.0.1:5173),http://localhost:3000
+   SECRET_KEY=change-this-to-a-secure-secret-key-min-32-characters
+   ADMIN_USERNAME=admin
+   ADMIN_PASSWORD=admin123
+   ADMIN_EMAIL=admin@example.com
+   ```
+3. *(Optional)* Initialize the default admin user after starting Redis:
+   ```powershell
+   uv run python scripts/init_admin.py
+   ```
+4. Start the FastAPI server:
+   ```powershell
+   uv run uvicorn main:app --reload
+   ```
+   - **Backend URL:** `http://localhost:8000`
+   - **API Docs:** `http://localhost:8000/docs`
 
-Start the backend:
+---
 
-```powershell
-uv run uvicorn main:app --reload
-```
+### 3. Frontend Setup
+1. Open a new terminal and navigate to the frontend directory:
+   ```powershell
+   cd frontend
+   npm install
+   npm run dev
+   ```
+   - **Frontend URL:** `http://localhost:5173`
+2. To override the default backend URL (`http://localhost:8000`), create `frontend/.env`:
+   ```env
+   VITE_API_BASE_URL=http://localhost:8000
+   ```
 
-Backend URL:
+---
 
-```txt
-http://localhost:8000
-```
-
-API docs:
-
-```txt
-http://localhost:8000/docs
-```
-
-## Frontend Setup
-
-In another terminal:
-
-```powershell
-cd frontend
-npm install
-npm run dev
-```
-
-Frontend URL:
-
-```txt
-http://localhost:5173
-```
-
-The frontend defaults to:
-
-```env
-VITE_API_BASE_URL=http://localhost:8000
-```
-
-To override it, create `frontend/.env`:
-
-```env
-VITE_API_BASE_URL=http://localhost:8000
-```
-
-## Docker
-
+### 4. Quick Start with Docker
 Create `backend/.env` first, then run from the project root:
-
 ```powershell
 docker compose up --build
 ```
-
-Services:
-
-- Frontend: `http://localhost:3000`
-- Backend: `http://localhost:8000`
-- Redis: `localhost:6379`
+- **Frontend:** `http://localhost:3000`
+- **Backend:** `http://localhost:8000`
+- **Redis:** `localhost:6379`
 
 For backend Docker development with reload:
-
 ```powershell
 docker compose -f docker-compose.dev.yml up --build
 ```
 
-## API Endpoints
+---
+
+## 📡 API Endpoints
 
 ### Health
-
 - `GET /api/health`
 
 ### Authentication
-
 - `POST /api/auth/register`
 - `POST /api/auth/login`
 - `POST /api/auth/refresh`
@@ -184,45 +157,25 @@ docker compose -f docker-compose.dev.yml up --build
 - `DELETE /api/auth/users/{user_id}`
 
 ### Ingestion
-
 - `POST /ingest/upload-text`
 - `POST /ingest/upload-file`
 - `GET /ingest/sources`
 - `DELETE /ingest/clear-all`
 
 ### Query
-
 - `POST /api/query`
 - `GET /api/cache/stats`
 
-## Admin User
+---
 
-After Redis and the backend environment are configured:
+## 🌐 Deployment Notes
 
-```powershell
-cd backend
-uv run python scripts/init_admin.py
-```
+Frontend and backend are designed to deploy separately:
+- **Frontend:** Vercel or Netlify (`VITE_API_BASE_URL=https://your-backend-domain.com`)
+- **Backend:** Render, Railway, or Fly.io with persistent storage mounted to `VECTOR_STORE_PATH`
+- **Redis:** Upstash Redis or managed Redis from your backend host
 
-## Deployment Notes
-
-Frontend and backend are intended to deploy separately.
-
-Recommended setup:
-
-- Frontend: Vercel or Netlify
-- Backend: Render, Railway, or Fly.io
-- Redis: Upstash Redis or managed Redis from your backend host
-- Vector store: persistent backend disk for MVP, hosted vector DB later
-
-Frontend deployment env:
-
-```env
-VITE_API_BASE_URL=https://your-backend-domain.com
-```
-
-Backend deployment env:
-
+Backend production environment variables:
 ```env
 OPENAI_API_KEY=your_openai_api_key_here
 LLM_MODEL=gpt-4o-mini
@@ -230,50 +183,26 @@ REDIS_HOST=your_redis_host
 REDIS_PORT=6379
 REDIS_PASSWORD=your_redis_password
 VECTOR_STORE_PATH=/app/vector_store
-CORS_ORIGINS=https://your-frontend-domain.com
+CORS_ORIGINS=[https://your-frontend-domain.com](https://your-frontend-domain.com)
 SECRET_KEY=your_secret_key
 ```
 
-For production, make sure `VECTOR_STORE_PATH` points to persistent storage. If the backend host uses ephemeral storage, uploaded/indexed documents may disappear after restarts.
+---
 
-## Useful Commands
-
-Backend:
-
-```powershell
-cd backend
-uv run uvicorn main:app --reload
-```
-
-Frontend:
-
-```powershell
-cd frontend
-npm run dev
-```
-
-Frontend build:
-
-```powershell
-cd frontend
-npm run build
-```
-
-Docker:
-
-```powershell
-docker compose up --build
-```
-
-## Git Safety
-
-Do not commit real environment files:
-
+## 🛡️ Git Safety
+Do not commit real environment files containing API keys or secrets:
 - `backend/.env`
 - `frontend/.env`
 
 Use `.env.example` files for shared configuration templates.
 
-## License
+---
 
-MIT
+## 👨‍💻 Author
+**Akshay Jain**
+- GitHub: [@akshay-bytes11](https://github.com/akshay-bytes11)
+
+---
+
+## 📄 License
+This project is licensed under the MIT License.
